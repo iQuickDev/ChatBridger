@@ -1,19 +1,41 @@
-const sqlite3 = require('sqlite3').verbose()
+const fs = require('fs')
 
 module.exports = class DatabaseManager {
 
-    db
+    static db
 
-    constructor()
-    {
-        this.db = new sqlite3.Database("../database.sqlite3", (err) =>
-        {
-            if (err)
-            {
-                console.error(err.message)
-            }
+    static init() {
+        try {
+            DatabaseManager.db = JSON.parse(fs.readFileSync('./database.json', 'utf8'))
+        }
+        catch (error) {
+            DatabaseManager.reset()
+            DatabaseManager.save()
+        }
+    }
 
-            console.log('Connected to the database')
-        })
+    static save() {
+        fs.writeFileSync('./database.json', JSON.stringify(this.db, null, 2))
+        DatabaseManager.init()
+    }
+
+    static reset() {
+        DatabaseManager.db = {
+            whatsappGroup: "",
+            telegramGroup: "",
+            discordServer: "",
+            discordChannel: ""
+        }
+
+        this.save()
+    }
+
+    static set(key, value) {
+        DatabaseManager.db[key] = value
+        DatabaseManager.save()
+    }
+
+    static get(key) {
+        return DatabaseManager.db[key]
     }
 }
