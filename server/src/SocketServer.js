@@ -10,8 +10,6 @@ module.exports = class SocketServer
 
         this.io.on('connection', (socket) =>
         {
-            console.log('Socket connected')
-
             socket.on('message', (msg) =>
             {
                 this.io.emit('message', msg)

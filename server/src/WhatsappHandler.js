@@ -23,6 +23,8 @@ module.exports = class WhatsappHandler {
         this.client.on('ready', () => {
             console.log('Whatsapp client is ready')
             this.group = DatabaseManager.get('whatsappGroup')
+            if (!this.group)
+                console.log('No whatsapp group set')
         })
 
         this.client.on('message_create', async (msg) => {

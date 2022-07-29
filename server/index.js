@@ -12,9 +12,15 @@ const io = require('socket.io-client')
 app.use(express.static('public'))
 app.use(express.json())
 
-let discord = new DiscordHandler()
-let whatsapp = new WhatsappHandler()
-let telegram = new TelegramHandler()
+let services = []
+
+services.push(new WhatsappHandler())
+if (process.env.DISCORD_TOKEN)
+    services.push(new DiscordHandler())
+if (process.env.TELEGRAM_TOKEN)
+    services.push(new TelegramHandler())
+
+
 let socketServer = new SocketServer()
 let socket = io(`http://127.0.0.1:${process.env.SOCKET_PORT}`).connect()
 
@@ -27,16 +33,13 @@ socket.on('message', (msg) => {
         {
             switch (msg.platform) {
                 case 'discord':
-                    telegram.send(formattedMsg)
-                    whatsapp.send(formattedMsg)
+                    services.find(service => !(service instanceof DiscordHandler)).send(formattedMsg)
                     break
                 case 'whatsapp':
-                    telegram.send(formattedMsg)
-                    discord.send(formattedMsg)
+                    services.find(service => !(service instanceof WhatsappHandler)).send(formattedMsg)
                     break
                 case 'telegram':
-                    whatsapp.send(formattedMsg)
-                    discord.send(formattedMsg)
+                    services.find(service => !(service instanceof TelegramHandler)).send(formattedMsg)
                     break
             }
     
@@ -54,6 +57,16 @@ function formatMessage(msg)
     return `[${msg.platform}] ${msg.author}: ${msg.message}`
 }
 
+app.post('/enable', (req, res) => {
+    // todo
+})
+
+app.post('/disable', (req, res) => {
+    // todo
+})
+
 app.listen(process.env.WEB_PORT || 5000, () => {
     console.log('Server is running')
 })
+
+// todo: media support

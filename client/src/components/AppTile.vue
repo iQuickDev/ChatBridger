@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref} from 'vue'
-import info from '../assets/info.png'
+import settings from '../assets/gear.png'
 import poweroff from '../assets/poweroff.png'
 
 const props = defineProps({
@@ -10,7 +10,7 @@ const props = defineProps({
   },
   appIcon: {
     type: String,
-    default: 'https://via.placeholder.com/150'
+    default: ''
   },
    colors: {
         type: Array,
@@ -22,7 +22,7 @@ const props = defineProps({
 
 <template>
 <div class="app-container">
-<img :src=info class="info">
+<img :src=settings class="settings">
 <h1>{{appName}}</h1>
 <span class="spacer"></span>
 <img class="mainimage" :src=appIcon>
@@ -41,7 +41,6 @@ h1, h2, h3, h4, h5, h6
 .app-container
 {
     position: relative;
-    border: 1px solid #000;
     border-radius: 10px;
     padding: 10px;
     width: 200px;
@@ -52,6 +51,16 @@ h1, h2, h3, h4, h5, h6
     justify-content: center;
     align-items: center;
     color: #fff;
+    margin: 2vw;
+    transition: .3s;
+}
+
+.app-container:hover
+{
+    transition: .3s;
+    cursor: pointer;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px 1px v-bind('colors[0]');
 }
 
 .app-container h1
@@ -78,7 +87,7 @@ h1, h2, h3, h4, h5, h6
     height: 50px;
 }
 
-.info
+.settings
 {
     width: 30px;
     height: 30px;

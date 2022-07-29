@@ -10,8 +10,10 @@ module.exports = class TelegramHandler {
     constructor() {
         this.client = new telegramClient(process.env.TELEGRAM_TOKEN, {
             polling: true,
-            onlyFirstMatch: true,
-            
+            pollingOptions: {
+                limit: 1,
+                allowed_updates: ['message']
+            }
         })
 
         this.group = DatabaseManager.get('telegramGroup')
