@@ -19,27 +19,33 @@ let socketServer = new SocketServer()
 let socket = io(`http://127.0.0.1:${process.env.SOCKET_PORT}`).connect()
 
 socket.on('message', (msg) => {
-    let formattedMsg = formatMessage(msg)
-    if (!msg.message.includes('[discord]') &&
-    !msg.message.includes('[telegram]') &&
-    !msg.message.includes('[whatsapp]'))
-    {
-        switch (msg.platform) {
-            case 'discord':
-                telegram.send(formattedMsg)
-                whatsapp.send(formattedMsg)
-                break
-            case 'whatsapp':
-                telegram.send(formattedMsg)
-                discord.send(formattedMsg)
-                break
-            case 'telegram':
-                whatsapp.send(formattedMsg)
-                discord.send(formattedMsg)
-                break
+    try {
+        let formattedMsg = formatMessage(msg)
+        if (!msg.message.includes('[discord]') &&
+        !msg.message.includes('[telegram]') &&
+        !msg.message.includes('[whatsapp]'))
+        {
+            switch (msg.platform) {
+                case 'discord':
+                    telegram.send(formattedMsg)
+                    whatsapp.send(formattedMsg)
+                    break
+                case 'whatsapp':
+                    telegram.send(formattedMsg)
+                    discord.send(formattedMsg)
+                    break
+                case 'telegram':
+                    whatsapp.send(formattedMsg)
+                    discord.send(formattedMsg)
+                    break
+            }
+    
+            console.log(msg)
         }
-
-        console.log(msg)
+    }
+    catch (error)
+    {
+        return
     }
 })
 

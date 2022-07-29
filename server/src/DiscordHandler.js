@@ -71,6 +71,7 @@ module.exports = class DiscordHandler
         }
 
         let channel = await this.client.channels.cache.get(this.channel.channelID)
+        if (channel)
         channel.send(message)
     }
 }
