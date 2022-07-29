@@ -23,8 +23,8 @@ module.exports = class DiscordHandler
         this.socket = io(`http://127.0.0.1:${process.env.SOCKET_PORT}`).connect()
 
         this.channel = {
-            serverID: DatabaseManager.db.discordServer,
-            channelID: DatabaseManager.db.discordChannel
+            serverID: DatabaseManager.get('discordServer'),
+            channelID: DatabaseManager.get('discordChannel')
         }
 
         this.client.on('messageCreate', (msg) =>
@@ -62,7 +62,7 @@ module.exports = class DiscordHandler
         channel.send('Welcome to the bridged chat channel!')
     }
 
-    static async send(message)
+    async send(message)
     {
         if (!this.channel.channelID)
         {
